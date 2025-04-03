@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa Interativo - ERIKA SOUZA LUZ</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+    
+    <!-- Vue 3 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1><i class="fas fa-map-marked-alt"></i> Mapa Interativo Erika Luz</h1>
+            <div class="search-box">
+                <input type="text" v-model="codigoIbge" placeholder="Digite o código IBGE do município" @keyup.enter="carregarMunicipio">
+                <button @click="carregarMunicipio"><i class="fas fa-search"></i> Buscar</button>
+            </div>
+        </header>
+
+        <main>
+            <div class="map-container">
+                <div id="map"></div>
+            </div>
+
+            <div class="info-panel">
+                <div v-if="municipioCarregado">
+                    <h2>{{ municipio.nome }} - {{ municipio.uf }}</h2>
+                    <p>Código IBGE: {{ municipio.codigo_ibge }}</p>
+                    
+                    <div class="media-container">
+                        <h3><i class="fas fa-images"></i> Mídias</h3>
+                        <media-component 
+                            :medias="municipio.medias" 
+                            @add-media="adicionarMidia"
+                            @remove-media="removerMidia">
+                        </media-component>
+                    </div>
+                    
+                    <div class="description">
+                        <h3><i class="fas fa-info-circle"></i> Descrição</h3>
+                        <textarea v-model="municipio.descricao" placeholder="Adicione uma descrição sobre o município..."></textarea>
+                        <button @click="salvarDescricao"><i class="fas fa-save"></i> Salvar Descrição</button>
+                    </div>
+                </div>
+                
+                <div v-else class="empty-state">
+                    <i class="fas fa-map-marked-alt fa-5x"></i>
+                    <p>Busque um município pelo código IBGE para começar</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    
+    <!-- IBGE Boundaries API -->
+    <script src="https://servicodados.ibge.gov.br/api/docs/malhas/distritos?versao=3"></script>
+    
+    <script src="js/components/MediaComponent.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
